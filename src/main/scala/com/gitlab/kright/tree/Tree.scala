@@ -66,7 +66,7 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
   }
 
   def apply(i: Int): T = {
-    assert(i < size)
+    assert(i < size, s"wrong index: $i, but size is $size")
     assert(i >= 0)
     this match {
       case Empty => ???
@@ -90,7 +90,7 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
             if (i2 == middle.size) {
               midRightValue
             } else {
-              right(i - middle.size - 1)
+              right(i2 - middle.size - 1)
             }
           }
         }

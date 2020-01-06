@@ -29,6 +29,9 @@ class TreeTest extends org.scalatest.FunSuite {
 
         assert(tree.toArray[Int] sameElements expected.sorted,
           s"expected: ${expected.mkString(", ")}, found: ${tree.toArray.mkString(", ")}")
+
+        assert(tree.min == expected.min)
+        assert(tree.max == expected.max)
       }
     }
   }

@@ -11,11 +11,17 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
 
   def length: Int
 
-  override def toArray[U >: T: ClassTag]: Array[U] = {
+  override def toArray[U >: T : ClassTag]: Array[U] = {
     val builder = mutable.ArrayBuilder.make[U]
     foreach(builder.addOne)
     builder.result()
   }
+
+  override def isEmpty: Boolean =
+    this match {
+      case Empty => true
+      case _ => false
+    }
 
   override def foreach[U](func: T => U): Unit =
     this match {
@@ -161,7 +167,28 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
 
     }
   }
+
+  override def min[U >: T](implicit ord: Ordering[U]): T =
+    this match {
+      case Tree2(left, value, _) =>
+        if (left.depth > 0) left.min[U] else value
+      case Tree3(left, value, _, _, _) =>
+        if (left.depth > 0) left.min[U] else value
+      case Empty =>
+        throw new UnsupportedOperationException("empty.min")
+    }
+
+  override def max[U >: T](implicit ord: Ordering[U]): T =
+    this match {
+      case Tree2(_, value, right) =>
+        if (right.depth > 0) right.max[U] else value
+      case Tree3(_, _, _, value, right) =>
+        if (right.depth > 0) right.max[U] else value
+      case Empty =>
+        throw new UnsupportedOperationException("empty.max")
+    }
 }
+
 
 case object Empty extends Tree[Nothing] {
   override def depth: Int = 0

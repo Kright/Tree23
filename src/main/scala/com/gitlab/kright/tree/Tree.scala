@@ -120,7 +120,7 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
     this match {
       case Empty => Right((Empty, elem, Empty))
 
-      case t@Tree2(left, midValue, right) => Left{
+      case t@Tree2(left, midValue, right) => Left {
         ord.compare(elem, midValue) match {
           case s if s < 0 =>
             left.innerInsert(elem) match {
@@ -198,8 +198,8 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
     } else {
       right match {
         case Tree2(rl, rv, rr) => unsafeTree(left, value, rl, rv, rr)
-        case Tree3(rl, rlv, rm, rrv, rr) => unsafeTree(left, value, rl, rrv, rm, rrv, rr)
-        case Empty => ??? // isn't possible
+        case Tree3(rl, rlv, rm, rrv, rr) => unsafeTree(left, value, rl, rlv, rm, rrv, rr)
+        case Empty => ??? // impossible
       }
     }
 
@@ -210,7 +210,7 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
       left match {
         case Tree2(ll, lv, lr) => unsafeTree(ll, lv, lr, value, right)
         case Tree3(ll, llv, lm, lrv, lr) => unsafeTree(ll, llv, lm, lrv, lr, value, right)
-        case Empty => ??? // isn't possible
+        case Empty => ??? // impossible
       }
     }
 
@@ -257,7 +257,7 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
     } else {
       middle match {
         case Tree2(ml, mv, mr) =>
-          unsafeTree(left, midLeftValue, unsafeTree(ml, mv, mr, midLeftValue, right))
+          unsafeTree(left, midLeftValue, unsafeTree(ml, mv, mr, midRightValue, right))
         case Tree3(ml, mlv, mm, mrv, mr) =>
           unsafeTree(left, midLeftValue, unsafeTree(ml, mlv, mm), mrv, unsafeTree(mr, midRightValue, right))
         case Empty => ??? // impossible
@@ -306,6 +306,15 @@ sealed trait Tree[+T] extends immutable.Seq[T] {
           }
           case 4 => right.innerRemove(elem).map(innerFixRight(left, midLeftValue, middle, midRightValue, _))
         }
+    }
+
+  def structureToString: String =
+    this match {
+      case Empty => "."
+      case Tree2(left, value, right) =>
+        s"(${left.structureToString}, $value, ${right.structureToString})"
+      case Tree3(left, midLeftValue, middle, midRightValue, right) =>
+        s"(${left.structureToString}, $midLeftValue, ${middle.structureToString}, $midRightValue, ${right.structureToString})"
     }
 }
 

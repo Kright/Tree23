@@ -1,9 +1,11 @@
 package com.gitlab.kright.tree
 
+import org.scalatest.funsuite.AnyFunSuite
+
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-class TreeTest extends org.scalatest.FunSuite {
+class TreeTest extends AnyFunSuite {
 
   test("empty tree") {
     assert(Tree.empty.size == 0)

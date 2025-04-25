@@ -1,9 +1,11 @@
 package com.gitlab.kright.tree
 
+import org.scalatest.funsuite.AnyFunSuite
+
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-class TreeSortedSetTest extends org.scalatest.FunSuite {
+class TreeSortedSetTest extends AnyFunSuite {
 
   test("empty set") {
     assert(TreeSortedSet.empty[Int].size == 0)

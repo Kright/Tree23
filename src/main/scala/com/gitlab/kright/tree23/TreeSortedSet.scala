@@ -1,4 +1,4 @@
-package com.gitlab.kright.tree
+package com.gitlab.kright.tree23
 
 import scala.collection._
 import scala.collection.generic.DefaultSerializable

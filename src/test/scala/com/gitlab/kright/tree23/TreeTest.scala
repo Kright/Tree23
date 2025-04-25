@@ -1,34 +1,36 @@
-package com.gitlab.kright.tree
+package com.gitlab.kright.tree23
 
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-class TreeSortedSetTest extends AnyFunSuite {
+class TreeTest extends AnyFunSuite {
 
-  test("empty set") {
-    assert(TreeSortedSet.empty[Int].size == 0)
-    assert(TreeSortedSet.empty[Int].isEmpty)
-    assert(TreeSortedSet.empty[Int].toArray.sameElements(Array[Int]()))
-    assert(TreeSortedSet.empty[Int].excl(0).toArray.sameElements(Array[Int]()))
+  test("empty tree") {
+    assert(Tree.empty.size == 0)
+    assert(Tree.empty.depth == 0)
+    assert(Tree.empty.isEmpty)
+    assert(Tree.empty[Int].toArray.sameElements(Array[Int]()))
+    assert(Tree.empty[Int].remove(0).toArray.sameElements(Array[Int]()))
   }
 
-  test("one-element set") {
-    assert(TreeSortedSet(1).size == 1)
-    assert(TreeSortedSet(1).nonEmpty)
-    assert(TreeSortedSet(1).toArray.sameElements(Array(1)))
-    assert(TreeSortedSet(1).excl(0).toArray.sameElements(Array(1)))
-    assert(TreeSortedSet(1).excl(1).toArray.sameElements(Array[Int]()))
+  test("one-node tree") {
+    assert(Tree(1).size == 1)
+    assert(Tree(1).depth == 1)
+    assert(Tree(1).nonEmpty)
+    assert(Tree(1).toArray.sameElements(Array(1)))
+    assert(Tree(1).remove(0).toArray.sameElements(Array(1)))
+    assert(Tree(1).remove(1).toArray.sameElements(Array[Int]()))
   }
 
   test("several insertions") {
     for (range <- Seq(1 to 10, 10 to 1 by -1, (1 to 12).map(_ * 7 % 13))) {
-      var tree = TreeSortedSet.empty[Int]
+      var tree: Tree[Int] = Tree.empty
       val summ = new ArrayBuffer[Int]()
 
       for (i <- range) {
-        tree = tree.incl(i)
+        tree = tree.insert(i)
         summ += i
 
         val expected = summ.distinct.sorted.toArray
@@ -40,7 +42,7 @@ class TreeSortedSetTest extends AnyFunSuite {
     }
   }
 
-  def assertSame[T](tree: TreeSortedSet[T], seq: Seq[T], msg: => String = "")(implicit tag: ClassTag[T], ord: Ordering[T]) = {
+  def assertSame[T](tree: Tree[T], seq: Seq[T], msg: => String = "")(implicit tag: ClassTag[T], ord: Ordering[T]) = {
     val expected = seq.distinct.sorted
     assert(tree.toArray.sameElements(expected),
       s"expected: ${expected.mkString("[", ", ", "]")}, found: ${tree.toArray.mkString("[", ", ", "]")}: $msg")
@@ -54,17 +56,17 @@ class TreeSortedSetTest extends AnyFunSuite {
     }
 
     def check(arr: Array[Int]) = {
-      var tree = TreeSortedSet.empty[Int]
+      var tree = Tree.empty[Int]
       arr.zipWithIndex.foreach { case (elem, index) =>
-        tree = tree.incl(elem)
+        tree = tree.insert(elem)
         assertSame(tree, arr.take(index + 1))
       }
 
       assertSame(tree, arr)
       arr.zipWithIndex.foreach { case (elem, index) =>
         assert(tree.nonEmpty)
-        val newTree = tree.excl(elem)
-        assertSame(newTree, arr.drop(index + 1), s"$tree => $newTree")
+        val newTree = tree.remove(elem)
+        assertSame(newTree, arr.drop(index + 1), s"${tree.structureToString} => ${newTree.structureToString}")
         tree = newTree
       }
       assert(tree.isEmpty)

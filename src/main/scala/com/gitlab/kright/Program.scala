@@ -1,6 +1,6 @@
 package com.gitlab.kright
 
-import com.gitlab.kright.tree.Tree
+import com.gitlab.kright.tree23.Tree
 
 object Program extends App {
 

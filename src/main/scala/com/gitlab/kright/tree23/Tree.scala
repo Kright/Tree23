@@ -1,4 +1,4 @@
-package com.gitlab.kright.tree
+package com.gitlab.kright.tree23
 
 import scala.collection.{AbstractIterator, immutable, mutable}
 import scala.reflect.ClassTag
@@ -332,7 +332,7 @@ case class Tree2[T](left: Tree[T], value: T, right: Tree[T]) extends Tree[T] {
 
   override val length: Int = left.size + 1 + right.size
 
-  private[tree] def getPos[U >: T](elem: U)(implicit ord: Ordering[U]): Int =
+  private[tree23] def getPos[U >: T](elem: U)(implicit ord: Ordering[U]): Int =
     ord.compare(elem, value) match {
       case s if s < 0 => 0
       case 0 => 1
@@ -347,7 +347,7 @@ case class Tree3[T](left: Tree[T], midLeftValue: T, middle: Tree[T], midRightVal
 
   override val length: Int = 2 + left.size + middle.size + right.size
 
-  private[tree] def getPos[U >: T](elem: U)(implicit ord: Ordering[U]): Int =
+  private[tree23] def getPos[U >: T](elem: U)(implicit ord: Ordering[U]): Int =
     ord.compare(elem, midLeftValue) match {
       case s if s < 0 => 0
       case 0 => 1
